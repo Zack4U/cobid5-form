@@ -66,13 +66,7 @@ const Results: React.FC = () => {
 
   // Data for radar chart
   const radarData = {
-    labels: [
-      "Gobernanza",
-      "Estrategia",
-      "Implementación",
-      "Servicios",
-      "Mejora",
-    ],
+    labels: ["EDM", "APO", "BAI", "DSS", "MEA"],
     datasets: [
       {
         data: [
@@ -225,16 +219,37 @@ const Results: React.FC = () => {
             maxScore={5}
           />
           <ScoreCard
-            title="Gobernanza y Estrategia"
-            score={(governanceScore + strategyScore) / 2}
-            description="Promedio de gobernanza y alineación estratégica"
+            title="EDM"
+            score={governanceScore}
+            description="Promedio de Evaluar, Dirigir y Monitorear"
             color="teal"
             maxScore={5}
           />
           <ScoreCard
-            title="Implementación y Servicios"
-            score={(implementationScore + serviceScore) / 2}
-            description="Promedio de implementación y gestión de servicios"
+            title="APO"
+            score={strategyScore}
+            description="Promedio de Alinear, Planificar y Organizar"
+            color="teal"
+            maxScore={5}
+          />
+          <ScoreCard
+            title="BAI"
+            score={implementationScore}
+            description="Promedio de Construir, Adquirir e Implementar"
+            color="green"
+            maxScore={5}
+          />
+          <ScoreCard
+            title="DSS"
+            score={serviceScore}
+            description="Promedio de Entregar, Servir y Soportar"
+            color="green"
+            maxScore={5}
+          />
+          <ScoreCard
+            title="MEA"
+            score={improvementScore}
+            description="Promedio de Monitorear, Evaluar y Mejorar"
             color="green"
             maxScore={5}
           />
@@ -257,13 +272,7 @@ const Results: React.FC = () => {
             </h2>
             <div className="h-80">
               <BarChart
-                labels={[
-                  "Gobernanza",
-                  "Estrategia",
-                  "Implementación",
-                  "Servicios",
-                  "Mejora",
-                ]}
+                labels={["EDM", "APO", "BAI", "DSS", "MEA"]}
                 data={[
                   governanceScore,
                   strategyScore,

@@ -104,11 +104,11 @@ const Results: React.FC = () => {
       ["Empleados", answers.q03 || "N/A"],
       [],
       ["Puntuación Global", overallScore],
-      ["Gobernanza", governanceScore],
-      ["Estrategia", strategyScore],
-      ["Implementación", implementationScore],
-      ["Servicios", serviceScore],
-      ["Mejora", improvementScore],
+      ["EDM", governanceScore],
+      ["APO", strategyScore],
+      ["BAI", implementationScore],
+      ["DSS", serviceScore],
+      ["MEA", improvementScore],
       [],
       ["Cumplimiento"],
       ...complianceData.map((c) => [c.label, c.value === 1 ? "Sí" : "No"]),
@@ -140,13 +140,116 @@ const Results: React.FC = () => {
       ]),
     ];
 
+    // Agregar funciones auxiliares antes del return
+    const getMaturityLevel = (score: number) => {
+      if (score < 2) return "0 - Incompleto";
+      if (score < 3) return "1 - Inicial";
+      if (score < 4) return "2 - Repetible";
+      if (score < 4.5) return "3 - Definido";
+      return "4 - Gestionado";
+    };
+
+    const getStatus = (score: number) => {
+      if (score < 2) return "Crítico";
+      if (score < 3) return "Necesita Mejora";
+      if (score < 4) return "En Desarrollo";
+      return "Satisfactorio";
+    };
+
+    const getRecommendation = (domain: string, score: number) => {
+      const recommendations = {
+        governance:
+          score < 3
+            ? "Implementar controles básicos de gobernanza"
+            : "Optimizar procesos existentes",
+        strategy:
+          score < 3
+            ? "Desarrollar plan estratégico de TI"
+            : "Refinar alineación con negocio",
+        implementation:
+          score < 3
+            ? "Establecer metodologías de gestión de proyectos"
+            : "Mejorar gestión de cambios",
+        service:
+          score < 3
+            ? "Implementar mesa de ayuda y monitoreo"
+            : "Optimizar SLAs y automatización",
+        improvement:
+          score < 3
+            ? "Establecer KPIs y auditorías regulares"
+            : "Implementar mejora continua",
+      };
+      return (
+        recommendations[domain as keyof typeof recommendations] ||
+        "Mantener nivel actual"
+      );
+    };
+
+    const analisisData = [
+      ["ANÁLISIS DETALLADO POR DOMINIO"],
+      [],
+      ["Dominio", "Puntuación", "Nivel de Madurez", "Estado", "Recomendación"],
+      [
+        "EDM - Evaluar, Dirigir y Monitorear",
+        governanceScore.toFixed(2),
+        getMaturityLevel(governanceScore),
+        getStatus(governanceScore),
+        getRecommendation("governance", governanceScore),
+      ],
+      [
+        "APO - Alinear, Planificar y Organizar",
+        strategyScore.toFixed(2),
+        getMaturityLevel(strategyScore),
+        getStatus(strategyScore),
+        getRecommendation("strategy", strategyScore),
+      ],
+      [
+        "BAI - Construir, Adquirir e Implementar",
+        implementationScore.toFixed(2),
+        getMaturityLevel(implementationScore),
+        getStatus(implementationScore),
+        getRecommendation("implementation", implementationScore),
+      ],
+      [
+        "DSS - Entregar, Servir y Soportar",
+        serviceScore.toFixed(2),
+        getMaturityLevel(serviceScore),
+        getStatus(serviceScore),
+        getRecommendation("service", serviceScore),
+      ],
+      [
+        "MEA - Monitorear, Evaluar y Mejorar",
+        improvementScore.toFixed(2),
+        getMaturityLevel(improvementScore),
+        getStatus(improvementScore),
+        getRecommendation("improvement", improvementScore),
+      ],
+      [],
+      ["BENCHMARKING"],
+      [],
+      ["Métrica", "Su Empresa", "Promedio Industria", "Mejor Práctica"],
+      ["Puntuación Global", overallScore.toFixed(2), "3.2", "4.5"],
+      [
+        "Cumplimiento Normativo",
+        `${(
+          (complianceData.filter((c) => c.value === 1).length /
+            complianceData.length) *
+          100
+        ).toFixed(1)}%`,
+        "75%",
+        "95%",
+      ],
+    ];
+
     // Crear workbook y hojas
     const wb = XLSX.utils.book_new();
     const wsResumen = XLSX.utils.aoa_to_sheet(resumenData);
     const wsPreguntas = XLSX.utils.aoa_to_sheet(preguntasData);
+    const wsAnalisis = XLSX.utils.aoa_to_sheet(analisisData);
 
     XLSX.utils.book_append_sheet(wb, wsResumen, "Resumen");
     XLSX.utils.book_append_sheet(wb, wsPreguntas, "Preguntas");
+    XLSX.utils.book_append_sheet(wb, wsAnalisis, "Análisis Detallado");
 
     // Descargar archivo
     XLSX.writeFile(

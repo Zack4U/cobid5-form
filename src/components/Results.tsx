@@ -122,6 +122,19 @@ const Results: React.FC = () => {
             .filter((ind: string) => ind.trim())
             .map((ind: string) => [ind.trim()])
         : []),
+      [],
+      ["Recomendaciones del Usuario"],
+      ["Principales áreas de oportunidad detectadas", answers.q27 || "N/A"],
+      [
+        "Recomendaciones específicas para mejorar procesos",
+        answers.q28 || "N/A",
+      ],
+      ["Priorización de acciones", answers.q29 || "N/A"],
+      ["Responsable asignado para seguimiento", answers.q30 || "N/A"],
+      [
+        "Fecha límite para la siguiente revisión",
+        answers.q31 ? formatDate(answers.q31) : "N/A",
+      ],
     ];
 
     const allQuestions = Object.values(chartGroups).flatMap((group) =>
